@@ -1,5 +1,14 @@
 #!/usr/bin/env python
 
+"""
+Search for
+README
+and
+TODO
+"""
+
+
+
 ####################################################################################################
 ####################################################################################################
 ##                                                                                                ##
@@ -282,12 +291,19 @@ class MPU6050:
     __AK893_RA_WIA = 0x00
     __AK893_RA_INFO = 0x01
     __AK893_RA_ST1 = 0x00
-    __AK893_RA_X_LO = 0x03
-    __AK893_RA_X_HI = 0x04
-    __AK893_RA_Y_LO = 0x05
-    __AK893_RA_Y_HI = 0x06
-    __AK893_RA_Z_LO = 0x07
-    __AK893_RA_Z_HI = 0x08
+#    __AK893_RA_X_LO = 0x03
+#    __AK893_RA_X_HI = 0x04
+#    __AK893_RA_Y_LO = 0x05
+#    __AK893_RA_Y_HI = 0x06
+#    __AK893_RA_Z_LO = 0x07
+#    __AK893_RA_Z_HI = 0x08
+__AK893_RA_X_LO = 0x04
+__AK893_RA_X_HI = 0x03
+__AK893_RA_Y_LO = 0x08
+__AK893_RA_Y_HI = 0x07
+__AK893_RA_Z_LO = 0x06
+__AK893_RA_Z_HI = 0x05
+
     __AK893_RA_ST2 = 0x09
     __AK893_RA_CNTL1 = 0x0A
     __AK893_RA_RSV = 0x0B
@@ -443,11 +459,20 @@ class MPU6050:
         #-------------------------------------------------------------------------------------------
         # Connect directly to the bypassed magnetometer, and configured it for 16 bit continuous data
         #-------------------------------------------------------------------------------------------
-        self.i2c_compass = I2C(0x0C)
-        self.i2c_compass.write8(self.__AK893_RA_CNTL1, 0x16);
+#        self.i2c_compass = I2C(0x0C)
+        self.i2c_compass = I2C(0x1E)
+        //self.i2c_compass.write8(self.__AK893_RA_CNTL1, 0x16);  #TODO  Continuous measurement mode 2 - 100Hz refresh rate 16 bit measurements
+        #HMC5883L - 75Hz, 8 samples per measurement, normal measurement configuration - write 0x78 to 0x00
+        self.i2c_compass.write8(0x00, 0x78)
+        #Default gain - write 0x20 to 0x01
+        self.i2c_compass.write8(0x01, 0x20)
+        #continuous measurement mode - write 0x00 to 0x02
+        self.i2c_compass.write8(0x02, 0x00)
+
+
 
     def readCompass(self):
-        compass_bytes = self.i2c_compass.readList(self.__AK893_RA_X_LO, 7)
+        compass_bytes = self.i2c_compass.readList(self.__AK893_RA_X_LO, 7)  #TODO
 
         #-------------------------------------------------------------------------------------------
         # Convert the array of 6 bytes to 3 shorts - 7th byte kicks off another read
@@ -2074,7 +2099,7 @@ class Quadcopter:
         ESC_BCM_BRU = 0
 
         if i_am_phoebe:
-            ESC_BCM_FLT = 27
+            ESC_BCM_FLT = 27  #README
             ESC_BCM_FRT = 17
             ESC_BCM_BLT = 26
             ESC_BCM_BRT = 19
