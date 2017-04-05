@@ -584,21 +584,22 @@ __AK893_RA_Z_HI = 0x05
         self.i2c_compass.write8(0x02, 0x00)
 
     def readCompass(self):
-        compass_bytes = self.i2c_compass.readList(self.__AK893_RA_X_LO, 7) #TODO
+        #compass_bytes = self.i2c_compass.readList(self.__AK893_RA_X_LO, 7) #TODO
+        compass_bytes = self.i2c_compass.readList(self.__AK893_RA_X_LO, 6)
 
         #-------------------------------------------------------------------------------------------
         # Convert the array of 6 bytes to 3 shorts - 7th byte kicks off another read
         #-------------------------------------------------------------------------------------------
         compass_data = []
         for ii in range(0, 6, 2):
-            lobyte = compass_bytes[ii]
-            hibyte = compass_bytes[ii + 1]
+            lobyte = compass_bytes[ii + 1]
+            hibyte = compass_bytes[ii]
             if (hibyte > 127):
                 hibyte -= 256
 
             compass_data.append((hibyte << 8) + lobyte)
 
-        [mgx, mgy, mgz] = compass_data
+        [mgx, mgz, mgy] = compass_data
 
         mgx -= self.mgx_offset
         mgy -= self.mgy_offset
