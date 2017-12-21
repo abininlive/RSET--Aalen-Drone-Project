@@ -62,7 +62,7 @@ bus.write_byte_data(hmc_address, 0x01, 0x60);                # full scale = +/- 
 bus.write_byte_data(hmc_address, 0x02, 0x00);                # continuous measurement mode
 bus.write_byte_data(mpu_address, 0x37, 0x00);                # disable i2c master bypass mode
 bus.write_byte_data(mpu_address, 0x6A, 0x20);                # enable i2c master mode
-
+HMC5883L_ADDRESS = 0x1e
 # configure the MPU6050 to automatically read the magnetometer
 bus.write_byte_data(mpu_address, 0x25, HMC5883L_ADDRESS | 0x80); # slave 0 i2c address, read mode
 bus.write_byte_data(mpu_address, 0x26, 0x03);                # slave 0 register = 0x03 (x axis)
@@ -71,7 +71,7 @@ bus.write_byte_data(mpu_address, 0x67, 1);                   # enable slave 0 de
 
 
 
-while(1):
+if 1:
     print "gyro data"
     print "---------"
 
@@ -141,3 +141,4 @@ while(1):
     print "Y Magnetic Field ", magn_y_gs, "Gs";
     print "Z Magnetic Field ", magn_z_gs, "Gs";
     time.sleep(0.5);
+
